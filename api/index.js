@@ -3,7 +3,6 @@ const path = require('path');
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
 // CORS headers
 app.use((req, res, next) => {
@@ -13,11 +12,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// Basic routes
+// Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'WhiskerSwap API is running' });
 });
 
+// Basic token data
 app.get('/api/tokens', (req, res) => {
   res.json([
     { symbol: 'HYPE', name: 'Hyperliquid', price: '48.50' },
@@ -29,9 +29,9 @@ app.get('/api/tokens', (req, res) => {
 // Serve static files
 app.use(express.static('public'));
 
-// Catch all - serve index.html for SPA routing
+// Catch all
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  res.json({ message: 'WhiskerSwap DEX API', path: req.url });
 });
 
 module.exports = app;
